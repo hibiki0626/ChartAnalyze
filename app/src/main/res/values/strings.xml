@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">ChartAnalyzeProject</string>
+    <string name="app_name">AmazingChart</string>
+    <string name="line_chart">折线图</string>
+    <string name="show_vertices_values">显示顶点值</string>
+    <string name="if_show_circle">显示圆点</string>
+    <string name="x_axis_animation">X轴动画</string>
+    <string name="y_axis_animation">Y轴动画</string>
+    <string name="x_y_axis_animation">XY轴动画</string>
+    <string name="save_to_local">保存到本地</string>
+    <string name="line_chart_title">近八年来移动班级男女人数走势图</string>
+    <string name="bar_chart">柱状图</string>
+    <string name="bie_chart">饼状图</string>
 </resources>
