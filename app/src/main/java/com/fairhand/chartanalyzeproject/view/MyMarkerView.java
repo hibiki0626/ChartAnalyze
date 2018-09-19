@@ -15,27 +15,36 @@ import com.github.mikephil.charting.utils.MPPointF;
  */
 public class MyMarkerView extends MarkerView {
     
-    private TextView mTextView;
+    private TextView mMarkTextView;
     
     private MPPointF mOffset;
     
     /**
+     * 默认UI（灰色对话框）
+     */
+    public MyMarkerView(Context context) {
+        super(context, R.layout.default_marker_view);
+        mMarkTextView = findViewById(R.id.tv_marker_view);
+    }
+    
+    /**
      * Constructor. Sets up the MarkerView with a custom layout resource.
+     * 自定义对话框样式
      *
      * @param layoutResource the layout resource to use for the MarkerView
      */
     public MyMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
-        mTextView = findViewById(R.id.tv_marker_view);
+        mMarkTextView = findViewById(R.id.tv_marker_view);
     }
     
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
         if (e instanceof CandleEntry) {
             CandleEntry ce = (CandleEntry) e;
-            mTextView.setText(String.valueOf((int) ce.getHigh()));
+            mMarkTextView.setText(String.valueOf((int) ce.getHigh()));
         } else {
-            mTextView.setText(String.valueOf((int) e.getY()));
+            mMarkTextView.setText(String.valueOf((int) e.getY()));
         }
         super.refreshContent(e, highlight);
     }

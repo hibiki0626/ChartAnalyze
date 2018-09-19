@@ -17,7 +17,6 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by FairHand on 2018/9/19.<br />
@@ -26,16 +25,42 @@ import java.util.Random;
 public class LineChartUtil {
     
     /**
-     * 获取Y轴数据（随机生成）
+     * 模拟男孩子数据
      */
-    public static ArrayList<Entry> getYValues() {
+    private static Integer[] boyValues = {17, 21, 15, 15, 11, 10, 19, 11, 12, 13};
+    
+    /**
+     * 模拟女孩子数据
+     */
+    private static Integer[] girlValues = {21, 17, 14, 24, 17, 17, 14, 22, 19, 14};
+    
+    /**
+     * 获取Y轴数据
+     */
+    public static ArrayList<Entry> getYValues(boolean isBoy) {
         ArrayList<Entry> entries = new ArrayList<>();
-        for (int i = 2010; i <= 2018; i++) {
-            int yValues = new Random().nextInt(60);
-            if (yValues < 30) {
-                yValues += 30;
+        int index = 0;
+        if (isBoy) {
+            for (int i = 2011; i <= 2018; i++) {
+                entries.add(new Entry(i, boyValues[index++]));
             }
-            entries.add(new Entry(i, yValues));
+        } else {
+            for (int i = 2011; i <= 2018; i++) {
+                entries.add(new Entry(i, girlValues[index++]));
+            }
+        }
+        return entries;
+    }
+    
+    /**
+     * 计算并获取总人数Y轴数据
+     */
+    public static ArrayList<Entry> getTotalYValues() {
+        ArrayList<Entry> entries = new ArrayList<>();
+        int index = 0;
+        for (int i = 2011; i <= 2018; i++) {
+            entries.add(new Entry(i, boyValues[index] + girlValues[index]));
+            index++;
         }
         return entries;
     }
@@ -74,17 +99,17 @@ public class LineChartUtil {
      * 绘制折线图
      */
     public static void drawLineChart(Context mContext, LineChart mLineChart) {
-        // 按比例缩放
+        // 设置按比例缩放
         mLineChart.setPinchZoom(true);
-        // 无数据时显示的文字
-        mLineChart.setNoDataText("暂无数据");
+        // 设置无数据时显示的文字
+        mLineChart.setNoDataText(mContext.getString(R.string.no_data));
         // 禁止缩放
         mLineChart.setScaleEnabled(false);
         // 禁止描述
         mLineChart.getDescription().setEnabled(false);
         // 设置点击一个点显示一个值的对话框
-        mLineChart.setMarker(new MyMarkerView(mContext, R.layout.custom_marker_view));
-    
+        mLineChart.setMarker(new MyMarkerView(mContext));
+        // 设置动画
         mLineChart.animateXY(1200, 1200);
         
         // X坐标轴
@@ -111,7 +136,7 @@ public class LineChartUtil {
         // 禁止显示网格线
         yAxis.setDrawGridLines(false);
         // 设置Y轴最大、最小值（自动分配刻度显示）
-        yAxis.setAxisMinimum(30);
+        yAxis.setAxisMinimum(0);
         yAxis.setAxisMaximum(60);
         // 禁止显示右侧Y轴
         mLineChart.getAxisRight().setEnabled(false);

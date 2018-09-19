@@ -2,13 +2,17 @@
     <string name="app_name">AmazingChart</string>
     <string name="line_chart">折线图</string>
     <string name="show_vertices_values">显示顶点值</string>
-    <string name="if_show_circle">显示圆点</string>
-    <string name="x_axis_animation">X轴动画</string>
-    <string name="y_axis_animation">Y轴动画</string>
-    <string name="x_y_axis_animation">XY轴动画</string>
+    <string name="hint_vertices_values">隐藏顶点值</string>
+    <string name="show_circle">显示圆点</string>
+    <string name="hint_circle">隐藏圆点</string>
+    <string name="x_y_axis_animation">绘制动画</string>
     <string name="save_to_local">保存到本地</string>
     <string name="line_chart_title">近八年来移动班级男女人数走势图</string>
     <string name="bar_chart">柱状图</string>
     <string name="bie_chart">饼状图</string>
     <string name="line_chart_description">一个简单的折线图</string>
+    <string name="only_see_boy">只看男孩子</string>
+    <string name="only_see_girl">只看女孩子</string>
+    <string name="no_data">暂无数据</string>
+    <string name="all_data">全数据</string>
 </resources>

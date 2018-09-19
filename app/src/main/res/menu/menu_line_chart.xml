@@ -3,28 +3,31 @@
 
     <item
         android:id="@+id/show_vertices_values"
-        android:title="@string/show_vertices_values"/>
+        android:title="@string/show_vertices_values" />
 
     <item
-        android:id="@+id/if_show_circle"
-        android:title="@string/if_show_circle"/>
-
-    <item
-        android:id="@+id/x_axis_animation"
-        android:title="@string/x_axis_animation"/>
-
-    <item
-        android:id="@+id/y_axis_animation"
-        android:title="@string/y_axis_animation"/>
+        android:id="@+id/show_circle"
+        android:title="@string/show_circle" />
 
     <item
         android:id="@+id/x_y_axis_animation"
-        android:title="@string/x_y_axis_animation"/>
+        android:title="@string/x_y_axis_animation" />
+
+    <item
+        android:id="@+id/only_see_boy"
+        android:title="@string/only_see_boy" />
+
+    <item
+        android:id="@+id/only_see_girl"
+        android:title="@string/only_see_girl" />
+
+    <item
+        android:id="@+id/all_data"
+        android:title="@string/all_data" />
 
     <item
         android:id="@+id/save_to_local"
-        android:title="@string/save_to_local"/>
-
+        android:title="@string/save_to_local" />
 
 
 </menu>
