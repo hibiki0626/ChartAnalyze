@@ -1,22 +1,36 @@
 package com.fairhand.chartanalyzeproject;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Button;
+
+import com.fairhand.chartanalyzeproject.adapter.ChartAdapter;
+import com.fairhand.chartanalyzeproject.entry.LineChart;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by FairHand on 2018/9/17.<br />
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     
-    private Button toLineChart;
+    private RecyclerView mRecyclerView;
     
-    private Button toBarChart;
+    private LineChart[] lineCharts = {
+            new LineChart(R.drawable.ic_line_chart_icon,
+                    "Line Chart",
+                    "一个简单的展示班级男女人数折线图"),
+            new LineChart(R.drawable.ic_line_chart_icon,
+                    "Bar Chart",
+                    "一个简单的展示班级男女人数柱状图"),
+            new LineChart(R.drawable.ic_line_chart_icon,
+                    "Pie Chart",
+                    "一个简单的展示班级男女人数饼状图")};
     
-    private Button toPieChart;
+    private ArrayList<LineChart> lineChartArrayList = new ArrayList<>();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,35 +49,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toLineChart = findViewById(R.id.bt_line_chart);
-        toBarChart = findViewById(R.id.bt_bar_chart);
-        toPieChart = findViewById(R.id.bt_pie_chart);
+        mRecyclerView = findViewById(R.id.recycler_view);
     }
     
     /**
      * 初始化数据
      */
     private void initData() {
-        toLineChart.setOnClickListener(this);
-        toBarChart.setOnClickListener(this);
-        toPieChart.setOnClickListener(this);
-    }
-    
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bt_line_chart:
-                // 打开折线图
-                Intent toLineIntent = new Intent(MainActivity.this, LineChartActivity.class);
-                startActivity(toLineIntent);
-                break;
-            case R.id.bt_bar_chart:
-                break;
-            case R.id.bt_pie_chart:
-                break;
-            default:
-                break;
-        }
+        lineChartArrayList.addAll(Arrays.asList(lineCharts));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ChartAdapter mChartAdapter = new ChartAdapter(this, lineChartArrayList);
+        mRecyclerView.setAdapter(mChartAdapter);
     }
     
 }

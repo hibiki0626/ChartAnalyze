@@ -10,4 +10,5 @@
     <string name="line_chart_title">近八年来移动班级男女人数走势图</string>
     <string name="bar_chart">柱状图</string>
     <string name="bie_chart">饼状图</string>
+    <string name="line_chart_description">一个简单的折线图</string>
 </resources>

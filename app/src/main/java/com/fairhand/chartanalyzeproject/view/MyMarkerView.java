@@ -1,8 +1,9 @@
-package com.fairhand.chartanalyzeproject;
+package com.fairhand.chartanalyzeproject.view;
 
 import android.content.Context;
 import android.widget.TextView;
 
+import com.fairhand.chartanalyzeproject.R;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
