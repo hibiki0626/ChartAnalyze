@@ -10,8 +10,8 @@
         android:title="@string/show_circle" />
 
     <item
-        android:id="@+id/x_y_axis_animation"
-        android:title="@string/x_y_axis_animation" />
+        android:id="@+id/dynamic_data"
+        android:title="@string/dynamic_data" />
 
     <item
         android:id="@+id/only_see_boy"

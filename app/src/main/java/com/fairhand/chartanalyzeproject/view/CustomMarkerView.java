@@ -13,7 +13,7 @@ import com.github.mikephil.charting.utils.MPPointF;
 /**
  * Created by FairHand on 2018/9/17.<br />
  */
-public class MyMarkerView extends MarkerView {
+public class CustomMarkerView extends MarkerView {
     
     private TextView mMarkTextView;
     
@@ -22,7 +22,7 @@ public class MyMarkerView extends MarkerView {
     /**
      * 默认UI（灰色对话框）
      */
-    public MyMarkerView(Context context) {
+    public CustomMarkerView(Context context) {
         super(context, R.layout.default_marker_view);
         mMarkTextView = findViewById(R.id.tv_marker_view);
     }
@@ -33,7 +33,7 @@ public class MyMarkerView extends MarkerView {
      *
      * @param layoutResource the layout resource to use for the MarkerView
      */
-    public MyMarkerView(Context context, int layoutResource) {
+    public CustomMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
         mMarkTextView = findViewById(R.id.tv_marker_view);
     }
@@ -52,7 +52,6 @@ public class MyMarkerView extends MarkerView {
     @Override
     public MPPointF getOffset() {
         if (mOffset == null) {
-            // 居中
             mOffset = new MPPointF(-(getWidth() / 2), -getHeight());
         }
         return mOffset;

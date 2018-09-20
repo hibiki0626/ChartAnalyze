@@ -4,19 +4,16 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 
 import com.fairhand.chartanalyzeproject.R;
-import com.fairhand.chartanalyzeproject.view.MyMarkerView;
+import com.fairhand.chartanalyzeproject.view.CustomMarkerView;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by FairHand on 2018/9/19.<br />
@@ -27,40 +24,73 @@ public class LineChartUtil {
     /**
      * 模拟男孩子数据
      */
-    private static Integer[] boyValues = {17, 21, 15, 15, 11, 10, 19, 11, 12, 13};
+    private static int[] boyValues = {17, 21, 15, 15, 11, 10, 19, 11, 12, 13};
     
     /**
      * 模拟女孩子数据
      */
-    private static Integer[] girlValues = {21, 17, 14, 24, 17, 17, 14, 22, 19, 14};
+    private static int[] girlValues = {21, 17, 14, 24, 17, 17, 14, 22, 19, 14};
     
     /**
      * 获取Y轴数据
      */
-    public static ArrayList<Entry> getYValues(boolean isBoy) {
+    public static ArrayList<Entry> getYValues(boolean isBoy, int[] fromInput) {
         ArrayList<Entry> entries = new ArrayList<>();
         int index = 0;
-        if (isBoy) {
-            for (int i = 2011; i <= 2018; i++) {
-                entries.add(new Entry(i, boyValues[index++]));
+        // 默认数据
+        if (fromInput == null) {
+            if (isBoy) {
+                for (int i = 2011; i <= 2018; i++) {
+                    entries.add(new Entry(i, boyValues[index++]));
+                }
+            } else {
+                for (int i = 2011; i <= 2018; i++) {
+                    entries.add(new Entry(i, girlValues[index++]));
+                }
             }
         } else {
-            for (int i = 2011; i <= 2018; i++) {
-                entries.add(new Entry(i, girlValues[index++]));
+            // 手动更新数据
+            if (isBoy) {
+                for (int i = 2011; i <= 2018; i++) {
+                    entries.add(new Entry(i, fromInput[index++]));
+                }
+            } else {
+                for (int i = 2011; i <= 2018; i++) {
+                    entries.add(new Entry(i, fromInput[index++]));
+                }
             }
         }
+        
         return entries;
     }
     
     /**
      * 计算并获取总人数Y轴数据
      */
-    public static ArrayList<Entry> getTotalYValues() {
+    public static ArrayList<Entry> getTotalYValues(int[] fromInputBoy, int[] fromInputGirl,
+                                                   YAxis yAxis) {
         ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<Integer> values = new ArrayList<>();
         int index = 0;
-        for (int i = 2011; i <= 2018; i++) {
-            entries.add(new Entry(i, boyValues[index] + girlValues[index]));
-            index++;
+        // 默认数据
+        if ((fromInputBoy == null) && (fromInputGirl == null)) {
+            for (int i = 2011; i <= 2018; i++) {
+                entries.add(new Entry(i, boyValues[index] + girlValues[index]));
+                index++;
+            }
+        } else {
+            // 手动更新数据
+            for (int i = 2011; i <= 2018; i++) {
+                assert fromInputBoy != null;
+                entries.add(new Entry(i, fromInputBoy[index] + fromInputGirl[index]));
+                values.add(fromInputBoy[index] + fromInputGirl[index]);
+                index++;
+            }
+            // 若总人数最大值超过Y轴标准值60，则设置Y轴最大值为最大总人数
+            int max = Collections.max(values);
+            if (max > 60) {
+                yAxis.setAxisMaximum(max);
+            }
         }
         return entries;
     }
@@ -81,12 +111,7 @@ public class LineChartUtil {
         // 设置折线宽度
         lineDataSet.setLineWidth(1.6f);
         // 格式化值为字符串
-        lineDataSet.setValueFormatter(new IValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                return String.valueOf((int) value);
-            }
-        });
+        lineDataSet.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> String.valueOf((int) value));
         // 设置值的文本大小
         lineDataSet.setValueTextSize(12);
         // 禁止显示十字交叉的纵横线
@@ -98,7 +123,7 @@ public class LineChartUtil {
     /**
      * 绘制折线图
      */
-    public static void drawLineChart(Context mContext, LineChart mLineChart) {
+    public static void drawLineChart(Context mContext, LineChart mLineChart, YAxis yAxis) {
         // 设置按比例缩放
         mLineChart.setPinchZoom(true);
         // 设置无数据时显示的文字
@@ -108,7 +133,7 @@ public class LineChartUtil {
         // 禁止描述
         mLineChart.getDescription().setEnabled(false);
         // 设置点击一个点显示一个值的对话框
-        mLineChart.setMarker(new MyMarkerView(mContext));
+        mLineChart.setMarker(new CustomMarkerView(mContext, R.layout.custom_marker_view));
         // 设置动画
         mLineChart.animateXY(1200, 1200);
         
@@ -124,15 +149,8 @@ public class LineChartUtil {
         xAxis.setAxisMinimum(2011f);
         xAxis.setAxisMaximum(2018f);
         // 格式化X轴值为字符串
-        xAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return String.valueOf((int) value);
-            }
-        });
+        xAxis.setValueFormatter((value, axis) -> String.valueOf((int) value));
         
-        // Y坐标轴
-        YAxis yAxis = mLineChart.getAxisLeft();
         // 禁止显示网格线
         yAxis.setDrawGridLines(false);
         // 设置Y轴最大、最小值（自动分配刻度显示）

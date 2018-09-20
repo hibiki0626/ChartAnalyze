@@ -17,10 +17,14 @@ import android.widget.Toast;
 
 import com.fairhand.chartanalyzeproject.util.LineChartUtil;
 import com.fairhand.chartanalyzeproject.R;
-import com.github.mikephil.charting.animation.Easing;
+import com.fairhand.chartanalyzeproject.view.CustomDialog;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by FairHand on 2018/9/17.<br />
@@ -52,6 +56,22 @@ public class LineChartActivity extends AppCompatActivity {
     private LineDataSet girlDataSet;
     private LineDataSet totalDataSet;
     
+    /**
+     * 输入的数据
+     */
+    private ArrayList<Integer> inputBoySet;
+    private ArrayList<Integer> inputGirlSet;
+    
+    /**
+     * 折线数据
+     */
+    private LineData lineData;
+    
+    /**
+     * Y轴
+     */
+    private YAxis yAxis;
+    
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +98,9 @@ public class LineChartActivity extends AppCompatActivity {
         mLineChartName = findViewById(R.id.tv_chart_name);
         mLineChart = findViewById(R.id.line_chart);
         
-        LineChartUtil.drawLineChart(this, mLineChart);
+        yAxis = mLineChart.getAxisLeft();
+        
+        LineChartUtil.drawLineChart(this, mLineChart, yAxis);
         
         setLineChartData();
         
@@ -94,21 +116,21 @@ public class LineChartActivity extends AppCompatActivity {
             boyDataSet = (LineDataSet) mLineChart.getData().getDataSetByIndex(0);
             girlDataSet = (LineDataSet) mLineChart.getData().getDataSetByIndex(1);
             // 设置值
-            boyDataSet.setValues(LineChartUtil.getYValues(true));
-            girlDataSet.setValues(LineChartUtil.getYValues(false));
-            totalDataSet.setValues(LineChartUtil.getTotalYValues());
+            boyDataSet.setValues(LineChartUtil.getYValues(true, null));
+            girlDataSet.setValues(LineChartUtil.getYValues(false, null));
+            totalDataSet.setValues(LineChartUtil.getTotalYValues(null, null, null));
             // 通过数据更新
             mLineChart.getData().notifyDataChanged();
             mLineChart.notifyDataSetChanged();
         } else {
             boyDataSet = LineChartUtil.setLineChartData(this, "男孩子",
-                    R.color.blueBoy, LineChartUtil.getYValues(true));
+                    R.color.blueBoy, LineChartUtil.getYValues(true, null));
             girlDataSet = LineChartUtil.setLineChartData(this, "女孩子",
-                    R.color.pinkGirl, LineChartUtil.getYValues(false));
+                    R.color.pinkGirl, LineChartUtil.getYValues(false, null));
             totalDataSet = LineChartUtil.setLineChartData(this, "总人数",
-                    R.color.colorPrimaryDark, LineChartUtil.getTotalYValues());
+                    R.color.colorPrimaryDark, LineChartUtil.getTotalYValues(null, null, null));
             
-            LineData lineData = new LineData(boyDataSet, girlDataSet, totalDataSet);
+            lineData = new LineData(boyDataSet, girlDataSet, totalDataSet);
             // 不显示数据
             lineData.setDrawValues(false);
             // 设置数据
@@ -160,9 +182,8 @@ public class LineChartActivity extends AppCompatActivity {
                     circleItem.setTitle(R.string.show_circle);
                 }
                 break;
-            case R.id.x_y_axis_animation:// XY轴动画（指定缓动动画）
-                mLineChart.animateXY(1200, 1200,
-                        Easing.EasingOption.EaseInOutExpo, Easing.EasingOption.EaseInOutExpo);
+            case R.id.dynamic_data:// 动态数据
+                showSetDataDialog();
                 break;
             case R.id.only_see_boy:// 只看男孩子
                 if (onlyBoyItem == null) {
@@ -201,6 +222,45 @@ public class LineChartActivity extends AppCompatActivity {
     }
     
     /**
+     * 打开设置数据对话框
+     */
+    private void showSetDataDialog() {
+        final CustomDialog dialog = new CustomDialog(this, R.style.CustomDialog);
+        dialog.setCancelable(false);
+        dialog.setOnPositiveClickListener(v -> {
+            inputBoySet = dialog.getBoyData();
+            inputGirlSet = dialog.getGirlData();
+            // 判断输入数据是否完整
+            if ((inputBoySet.size() < 8) || (inputGirlSet.size() < 8)) {
+                Toast.makeText(LineChartActivity.this, "请输入完整数据", Toast.LENGTH_SHORT).show();
+            } else {
+                setDynamicData();
+                Toast.makeText(LineChartActivity.this, "数据更新完成", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        }).setOnNegativeClickListener(v -> dialog.dismiss()).show();
+    }
+    
+    /**
+     * 设置动态数据
+     */
+    private void setDynamicData() {
+        int[] boyValues = inputBoySet.stream().mapToInt(Integer::intValue).toArray();
+        int[] girlValues = inputGirlSet.stream().mapToInt(Integer::intValue).toArray();
+        boyDataSet = LineChartUtil.setLineChartData(this, "男孩子",
+                R.color.blueBoy, LineChartUtil.getYValues(true, boyValues));
+        girlDataSet = LineChartUtil.setLineChartData(this, "女孩子",
+                R.color.pinkGirl, LineChartUtil.getYValues(false, girlValues));
+        totalDataSet = LineChartUtil.setLineChartData(this, "总人数",
+                R.color.colorPrimaryDark, LineChartUtil.getTotalYValues(boyValues, girlValues, yAxis));
+        lineData = new LineData(boyDataSet, girlDataSet, totalDataSet);
+        lineData.setDrawValues(false);
+        mLineChart.setData(lineData);
+        mLineChart.invalidate();
+        mLineChart.animateXY(1200, 1200);
+    }
+    
+    /**
      * 保存图表到本地
      */
     private void save() {
@@ -210,10 +270,11 @@ public class LineChartActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         } else {
-            if (mLineChart.saveToGallery(mLineChartName.getText().toString(), 100)) {
+            if (mLineChart.saveToGallery(mLineChartName.getText().toString() + UUID.randomUUID(),
+                    100)) {
                 Toast.makeText(LineChartActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(LineChartActivity.this, "文件已存在", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LineChartActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -224,14 +285,15 @@ public class LineChartActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (mLineChart.saveToGallery(mLineChartName.getText().toString(), 100)) {
+                    if (mLineChart.saveToGallery(mLineChartName.getText().toString() + UUID.randomUUID(),
+                            100)) {
                         Toast.makeText(LineChartActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(LineChartActivity.this, "文件已存在",
+                        Toast.makeText(LineChartActivity.this, "保存失败",
                                 Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "无法获取权限", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "无法获取读取权限", Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 break;
