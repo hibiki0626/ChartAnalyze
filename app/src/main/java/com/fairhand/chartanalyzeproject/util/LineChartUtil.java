@@ -50,14 +50,8 @@ public class LineChartUtil {
             }
         } else {
             // 手动更新数据
-            if (isBoy) {
-                for (int i = 2011; i <= 2018; i++) {
-                    entries.add(new Entry(i, fromInput[index++]));
-                }
-            } else {
-                for (int i = 2011; i <= 2018; i++) {
-                    entries.add(new Entry(i, fromInput[index++]));
-                }
+            for (int i = 2011; i <= 2018; i++) {
+                entries.add(new Entry(i, fromInput[index++]));
             }
         }
         
@@ -100,7 +94,6 @@ public class LineChartUtil {
      */
     public static LineDataSet setLineChartData(Context mContext, String label,
                                                int lineColorID, ArrayList<Entry> entries) {
-        
         LineDataSet lineDataSet = new LineDataSet(entries, label);
         // 设置数据依赖左侧Y轴
         lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);

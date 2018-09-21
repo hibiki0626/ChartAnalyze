@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
             new Chart(R.drawable.ic_line_chart_icon,
                     "Line Chart",
                     "一个简单的展示班级男女人数折线图"),
-            new Chart(R.drawable.ic_line_chart_icon,
+            new Chart(R.drawable.ic_bar_chart_icon,
                     "Bar Chart",
                     "一个简单的展示班级男女人数柱状图"),
-            new Chart(R.drawable.ic_line_chart_icon,
+            new Chart(R.drawable.ic_pie_chart_icon,
                     "Pie Chart",
                     "一个简单的展示班级男女人数饼状图")};
     
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         
         // 设置退出过渡动画(向左滑动)
         Slide slide = new Slide();
-        slide.setDuration(800);
+        slide.setDuration(520);
         slide.setSlideEdge(Gravity.START);
         getWindow().setExitTransition(slide);
     }

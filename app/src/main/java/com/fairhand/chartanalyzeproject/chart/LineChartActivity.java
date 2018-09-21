@@ -3,6 +3,7 @@ package com.fairhand.chartanalyzeproject.chart;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,10 +90,11 @@ public class LineChartActivity extends AppCompatActivity {
      * 初始化动画
      */
     private void initAnimation() {
+        Window window = getWindow();
         // 淡入淡出动画
         Fade fade = new Fade();
-        fade.setDuration(800);
-        getWindow().setEnterTransition(fade);
+        fade.setDuration(520);
+        window.setEnterTransition(fade);
     }
     
     /**
@@ -245,6 +248,10 @@ public class LineChartActivity extends AppCompatActivity {
             inputGirlSet = dialog.getGirlData();
             // 判断输入数据是否完整
             if ((inputBoySet.size() < 8) || (inputGirlSet.size() < 8)) {
+                // 震动
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                assert vibrator != null;
+                vibrator.vibrate(240);
                 Toast.makeText(LineChartActivity.this, "请输入完整数据", Toast.LENGTH_SHORT).show();
             } else {
                 setDynamicData();
