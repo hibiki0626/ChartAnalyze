@@ -1,5 +1,7 @@
 package com.fairhand.chartanalyzeproject.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -14,7 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.fairhand.chartanalyzeproject.R;
 import com.fairhand.chartanalyzeproject.chart.LineChartActivity;
-import com.fairhand.chartanalyzeproject.entry.LineChart;
+import com.fairhand.chartanalyzeproject.entity.Chart;
 
 import java.util.ArrayList;
 
@@ -26,11 +28,11 @@ public class ChartAdapter extends RecyclerView.Adapter<ChartAdapter.ViewHolder> 
     
     private Context mContext;
     
-    private ArrayList<LineChart> lineCharts;
+    private ArrayList<Chart> charts;
     
-    public ChartAdapter(Context mContext, ArrayList<LineChart> lineCharts) {
+    public ChartAdapter(Context mContext, ArrayList<Chart> charts) {
         this.mContext = mContext;
-        this.lineCharts = lineCharts;
+        this.charts = charts;
     }
     
     @NonNull
@@ -39,21 +41,23 @@ public class ChartAdapter extends RecyclerView.Adapter<ChartAdapter.ViewHolder> 
         View rootView = LayoutInflater.from(mContext).inflate(
                 R.layout.item_recycler_view, viewGroup, false);
         final ViewHolder holder = new ViewHolder(rootView);
-        holder.mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (holder.getAdapterPosition()) {
-                    case 0:
-                        Intent intent = new Intent(mContext, LineChartActivity.class);
+        holder.mCardView.setOnClickListener(v -> {
+            switch (holder.getAdapterPosition()) {
+                case 0:
+                    Intent intent = new Intent(mContext, LineChartActivity.class);
+                    if (mContext instanceof Activity) {
+                        mContext.startActivity(intent,
+                                ActivityOptions.makeSceneTransitionAnimation((Activity) mContext).toBundle());
+                    } else {
                         mContext.startActivity(intent);
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    default:
-                        break;
-                }
+                    }
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                default:
+                    break;
             }
         });
         return holder;
@@ -61,15 +65,15 @@ public class ChartAdapter extends RecyclerView.Adapter<ChartAdapter.ViewHolder> 
     
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        LineChart lineChart = lineCharts.get(position);
-        Glide.with(mContext).load(lineChart.getImageID()).into(viewHolder.chartImage);
-        viewHolder.chartName.setText(lineChart.getChartName());
-        viewHolder.chartDescribe.setText(lineChart.getChartDescribe());
+        Chart chart = charts.get(position);
+        Glide.with(mContext).load(chart.getImageID()).into(viewHolder.chartImage);
+        viewHolder.chartName.setText(chart.getChartName());
+        viewHolder.chartDescribe.setText(chart.getChartDescribe());
     }
     
     @Override
     public int getItemCount() {
-        return lineCharts.size();
+        return charts.size();
     }
     
     class ViewHolder extends RecyclerView.ViewHolder {

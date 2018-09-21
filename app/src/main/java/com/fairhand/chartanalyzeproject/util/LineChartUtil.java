@@ -86,10 +86,10 @@ public class LineChartUtil {
                 values.add(fromInputBoy[index] + fromInputGirl[index]);
                 index++;
             }
-            // 若总人数最大值超过Y轴标准值60，则设置Y轴最大值为最大总人数
+            // 若总人数最大值超过Y轴最大标准值60，则重设Y轴最大值
             int max = Collections.max(values);
             if (max > 60) {
-                yAxis.setAxisMaximum(max);
+                yAxis.setAxisMaximum((max + 10) / 10 * 10);
             }
         }
         return entries;

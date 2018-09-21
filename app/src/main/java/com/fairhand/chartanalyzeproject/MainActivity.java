@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
+import android.view.Gravity;
 
 import com.fairhand.chartanalyzeproject.adapter.ChartAdapter;
-import com.fairhand.chartanalyzeproject.entry.LineChart;
+import com.fairhand.chartanalyzeproject.entity.Chart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,18 +21,18 @@ public class MainActivity extends AppCompatActivity {
     
     private RecyclerView mRecyclerView;
     
-    private LineChart[] lineCharts = {
-            new LineChart(R.drawable.ic_line_chart_icon,
+    private Chart[] charts = {
+            new Chart(R.drawable.ic_line_chart_icon,
                     "Line Chart",
                     "一个简单的展示班级男女人数折线图"),
-            new LineChart(R.drawable.ic_line_chart_icon,
+            new Chart(R.drawable.ic_line_chart_icon,
                     "Bar Chart",
                     "一个简单的展示班级男女人数柱状图"),
-            new LineChart(R.drawable.ic_line_chart_icon,
+            new Chart(R.drawable.ic_line_chart_icon,
                     "Pie Chart",
                     "一个简单的展示班级男女人数饼状图")};
     
-    private ArrayList<LineChart> lineChartArrayList = new ArrayList<>();
+    private ArrayList<Chart> chartArrayList = new ArrayList<>();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +52,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mRecyclerView = findViewById(R.id.recycler_view);
+        
+        // 设置退出过渡动画(向左滑动)
+        Slide slide = new Slide();
+        slide.setDuration(800);
+        slide.setSlideEdge(Gravity.START);
+        getWindow().setExitTransition(slide);
     }
     
     /**
      * 初始化数据
      */
     private void initData() {
-        lineChartArrayList.addAll(Arrays.asList(lineCharts));
+        chartArrayList.addAll(Arrays.asList(charts));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ChartAdapter mChartAdapter = new ChartAdapter(this, lineChartArrayList);
+        ChartAdapter mChartAdapter = new ChartAdapter(this, chartArrayList);
         mRecyclerView.setAdapter(mChartAdapter);
     }
     
