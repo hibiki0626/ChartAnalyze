@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.fairhand.chartanalyzeproject.R;
 import com.fairhand.chartanalyzeproject.chart.LineChartActivity;
+import com.fairhand.chartanalyzeproject.chart.PieChartActivity;
 import com.fairhand.chartanalyzeproject.entity.Chart;
 
 import java.util.ArrayList;
@@ -55,6 +56,8 @@ public class ChartAdapter extends RecyclerView.Adapter<ChartAdapter.ViewHolder> 
                 case 1:
                     break;
                 case 2:
+                    Intent intent2 = new Intent(mContext, PieChartActivity.class);
+                    mContext.startActivity(intent2);
                     break;
                 default:
                     break;

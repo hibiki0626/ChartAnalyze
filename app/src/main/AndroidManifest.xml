@@ -24,6 +24,9 @@
         <activity
             android:name=".chart.LineChartActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".chart.PieChartActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 
