@@ -16,8 +16,7 @@
             android:id="@+id/iv_chart_icon"
             android:layout_width="52dp"
             android:layout_height="52dp"
-            android:contentDescription="@string/line_chart"
-            android:src="@drawable/ic_line_chart_icon" />
+            android:contentDescription="@string/line_chart" />
 
         <LinearLayout
             android:layout_width="wrap_content"

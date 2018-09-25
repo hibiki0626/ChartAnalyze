@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.fairhand.chartanalyzeproject.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by FairHand on 2018/9/19.<br />

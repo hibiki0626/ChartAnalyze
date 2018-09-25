@@ -1,10 +1,10 @@
-package com.fairhand.chartanalyzeproject.entry;
+package com.fairhand.chartanalyzeproject.entity;
 
 /**
  * Created by FairHand on 2018/9/19.<br />
- * 折线图实体类
+ * 图表实体类
  */
-public class LineChart {
+public class Chart {
     
     /**
      * 图
@@ -21,7 +21,7 @@ public class LineChart {
      */
     private String chartDescribe;
     
-    public LineChart(int imageID, String chartName, String chartDescribe) {
+    public Chart(int imageID, String chartName, String chartDescribe) {
         this.imageID = imageID;
         this.chartName = chartName;
         this.chartDescribe = chartDescribe;

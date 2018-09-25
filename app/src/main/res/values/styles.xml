@@ -6,6 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- 允许使用transitions -->
+        <item name="android:windowContentTransitions">true</item>
+        <!--是否覆盖执行，顺序执行-->
+        <item name="android:windowAllowEnterTransitionOverlap">false</item>
+        <item name="android:windowAllowReturnTransitionOverlap">false</item>
     </style>
 
     <!--标题与NavigationIcon的距离-->
@@ -14,7 +20,7 @@
         <item name="contentInsetStartWithNavigation">0dp</item>
     </style>
 
-    <!--自定义用于去除背景-->
+    <!--自定义用于去除Dialog背景-->
     <style name="CustomDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item><!--去除边框-->
         <item name="android:windowIsFloating">true</item><!--浮现在activity上-->

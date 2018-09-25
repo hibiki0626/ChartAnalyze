@@ -50,14 +50,8 @@ public class LineChartUtil {
             }
         } else {
             // 手动更新数据
-            if (isBoy) {
-                for (int i = 2011; i <= 2018; i++) {
-                    entries.add(new Entry(i, fromInput[index++]));
-                }
-            } else {
-                for (int i = 2011; i <= 2018; i++) {
-                    entries.add(new Entry(i, fromInput[index++]));
-                }
+            for (int i = 2011; i <= 2018; i++) {
+                entries.add(new Entry(i, fromInput[index++]));
             }
         }
         
@@ -86,10 +80,10 @@ public class LineChartUtil {
                 values.add(fromInputBoy[index] + fromInputGirl[index]);
                 index++;
             }
-            // 若总人数最大值超过Y轴标准值60，则设置Y轴最大值为最大总人数
+            // 若总人数最大值超过Y轴最大标准值60，则重设Y轴最大值
             int max = Collections.max(values);
             if (max > 60) {
-                yAxis.setAxisMaximum(max);
+                yAxis.setAxisMaximum((max + 10) / 10 * 10);
             }
         }
         return entries;
@@ -100,7 +94,6 @@ public class LineChartUtil {
      */
     public static LineDataSet setLineChartData(Context mContext, String label,
                                                int lineColorID, ArrayList<Entry> entries) {
-        
         LineDataSet lineDataSet = new LineDataSet(entries, label);
         // 设置数据依赖左侧Y轴
         lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);

@@ -3,6 +3,7 @@ package com.fairhand.chartanalyzeproject.chart;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -10,8 +11,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,8 +80,21 @@ public class LineChartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_line_chart);
         
+        initAnimation();
+        
         initView();
         
+    }
+    
+    /**
+     * 初始化动画
+     */
+    private void initAnimation() {
+        Window window = getWindow();
+        // 淡入淡出动画
+        Fade fade = new Fade();
+        fade.setDuration(520);
+        window.setEnterTransition(fade);
     }
     
     /**
@@ -213,7 +229,7 @@ public class LineChartActivity extends AppCompatActivity {
                 save();
                 break;
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 break;
             default:
                 break;
@@ -232,6 +248,10 @@ public class LineChartActivity extends AppCompatActivity {
             inputGirlSet = dialog.getGirlData();
             // 判断输入数据是否完整
             if ((inputBoySet.size() < 8) || (inputGirlSet.size() < 8)) {
+                // 震动
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                assert vibrator != null;
+                vibrator.vibrate(240);
                 Toast.makeText(LineChartActivity.this, "请输入完整数据", Toast.LENGTH_SHORT).show();
             } else {
                 setDynamicData();
@@ -245,8 +265,17 @@ public class LineChartActivity extends AppCompatActivity {
      * 设置动态数据
      */
     private void setDynamicData() {
-        int[] boyValues = inputBoySet.stream().mapToInt(Integer::intValue).toArray();
-        int[] girlValues = inputGirlSet.stream().mapToInt(Integer::intValue).toArray();
+        // 男孩子、女孩子数据
+        int[] boyValues;
+        int[] girlValues;
+        // API >= 24
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            boyValues = inputBoySet.stream().mapToInt(Integer::intValue).toArray();
+            girlValues = inputGirlSet.stream().mapToInt(Integer::intValue).toArray();
+        } else {
+            boyValues = arrayList2IntArray(inputBoySet);
+            girlValues = arrayList2IntArray(inputGirlSet);
+        }
         boyDataSet = LineChartUtil.setLineChartData(this, "男孩子",
                 R.color.blueBoy, LineChartUtil.getYValues(true, boyValues));
         girlDataSet = LineChartUtil.setLineChartData(this, "女孩子",
@@ -258,6 +287,30 @@ public class LineChartActivity extends AppCompatActivity {
         mLineChart.setData(lineData);
         mLineChart.invalidate();
         mLineChart.animateXY(1200, 1200);
+        // 重设菜单栏标题
+        if (onlyBoyItem != null) {
+            onlyBoyItem.setTitle(R.string.only_see_boy);
+        }
+        if (onlyGirlItem != null) {
+            onlyGirlItem.setTitle(R.string.only_see_girl);
+        }
+        if (verticesItem != null) {
+            verticesItem.setTitle(R.string.show_vertices_values);
+        }
+        if (circleItem != null) {
+            circleItem.setTitle(R.string.show_circle);
+        }
+    }
+    
+    /**
+     * ArrayList转换为数组
+     */
+    private int[] arrayList2IntArray(ArrayList<Integer> list) {
+        int[] toInt = new int[list.size()];
+        for (int i = 0; i < toInt.length; i++) {
+            toInt[i] = list.get(i);
+        }
+        return toInt;
     }
     
     /**
