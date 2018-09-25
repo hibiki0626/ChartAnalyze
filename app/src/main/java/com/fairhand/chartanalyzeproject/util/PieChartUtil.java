@@ -5,6 +5,15 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 public class PieChartUtil {
     /**
+     * 模拟男孩子数据
+     */
+    public static int[] boyValues = {17, 21, 15, 15, 11, 10, 19, 11, 12, 13};
+
+    /**
+     * 模拟女孩子数据
+     */
+    public static int[] girlValues = {21, 17, 14, 24, 17, 17, 14, 22, 19, 14};
+    /**
      * 显示饼状图表
      *
      * @param pieChart

@@ -2,6 +2,7 @@
     <string name="app_name">AmazingChart</string>
     <string name="line_chart">折线图</string>
     <string name="show_vertices_values">显示顶点值</string>
+    <string name="show_percent">显示百分比</string>
     <string name="hint_vertices_values">隐藏顶点值</string>
     <string name="show_circle">显示圆点</string>
     <string name="hint_circle">隐藏圆点</string>
